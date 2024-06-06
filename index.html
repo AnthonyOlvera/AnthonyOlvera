@@ -1,12 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Page Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Statistical Calculator</h2>
+        <input type="text" id="numbers" placeholder="Enter numbers separated by commas">
+        <button onclick="calculate()">Calculate</button>
+        <div id="result"></div>
+    </div>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+    <script>
+        function calculate() {
+            var numbersInput = document.getElementById("numbers").value;
+            var numbers = numbersInput.split(",").map(Number);
 
+            // Calculate Mean
+            var mean = numbers.reduce((acc, val) => acc + val, 0) / numbers.length;
+
+            // Calculate Median
+            numbers.sort(function(a, b) { return a - b; });
+            var median;
+            if (numbers.length % 2 === 0) {
+                median = (numbers[numbers.length / 2 - 1] + numbers[numbers.length / 2]) / 2;
+            } else {
+                median = numbers[Math.floor(numbers.length / 2)];
+            }
+
+            // Calculate Standard Deviation
+            var meanDeviation = numbers.map(num => Math.pow(num - mean, 2));
+            var variance = meanDeviation.reduce((acc, val) => acc + val, 0) / numbers.length;
+            var standardDeviation = Math.sqrt(variance);
+
+            // Calculate Interquartile Range
+            var q1, q3, interquartileRange;
+            if (numbers.length >= 4) {
+                var mid = Math.floor(numbers.length / 2);
+                if (numbers.length % 2 === 0) {
+                    q1 = median(numbers.slice(0, mid));
+                    q3 = median(numbers.slice(mid));
+                } else {
+                    q1 = median(numbers.slice(0, mid));
+                    q3 = median(numbers.slice(mid + 1));
+                }
+                interquartileRange = q3 - q1;
+            }
+
+            var result = "Mean: " + mean.toFixed(2) + "<br>";
+            result += "Median: " + median.toFixed(2) + "<br>";
+            result += "Standard Deviation: " + standardDeviation.toFixed(2) + "<br>";
+            result += "Interquartile Range: " + interquartileRange.toFixed(2);
+            document.getElementById("result").innerHTML = result;
+        }
+
+        function median(values) {
+            if (values.length % 2 === 0) {
+                return (values[values.length / 2 - 1] + values[values.length / 2]) / 2;
+            } else {
+                return values[Math.floor(values.length / 2)];
+            }
+        }
+    </script>
 </body>
 </html>
